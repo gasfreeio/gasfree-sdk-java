@@ -16,19 +16,19 @@ public class GasFreeUtils {
     public static String generateAddress(String user, String beanconAddress, String gasFreeContrallAddress, String creationCodeStr) {
         try {
             byte[] salt = new byte[32];
-            System.arraycopy(TronAddressUtils.decode58Check(user), 1, salt, 12, 20);
+            System.arraycopy(AddressUtil.decode58Check(user), 1, salt, 12, 20);
 
             byte[] creationCode = ByteArray.fromHexString(creationCodeStr);
 
             byte[] beacon = new byte[32];
-            System.arraycopy(TronAddressUtils.decode58Check(beanconAddress), 1, beacon, 12, 20);
+            System.arraycopy(AddressUtil.decode58Check(beanconAddress), 1, beacon, 12, 20);
 
             byte[] selector = new byte[4];
             System.arraycopy(Hash.sha3("initialize(address)".getBytes()), 0, selector, 0, 4);
             byte[] initializeFun = ByteUtils.concatenate(selector, salt);
 
             String encodeCall = FunctionEncoder.encodeConstructor(
-                    Arrays.asList(new Address(TronAddressUtils.replace41Address(beanconAddress)),
+                    Arrays.asList(new Address(AddressUtil.replace41Address(beanconAddress)),
                             new DynamicBytes(initializeFun)));
 
             // encodePacked
@@ -44,7 +44,7 @@ public class GasFreeUtils {
             byte[] result = new byte[21];
             result[0] = 0x41;
             System.arraycopy(bytes3, 12, result, 1, 20);
-            String gasFreeAddress = TronAddressUtils.encode58Check(result);
+            String gasFreeAddress = AddressUtil.encode58Check(result);
             return gasFreeAddress;
         } catch (Exception e) {
             e.printStackTrace();

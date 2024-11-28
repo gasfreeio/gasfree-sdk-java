@@ -12,7 +12,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.tron.gasfree.GasFreeUtils;
-import org.tron.gasfree.TronAddressUtils;
 
 public class MainActivity extends AppCompatActivity {
 
