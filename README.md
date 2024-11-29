@@ -1,7 +1,7 @@
 # gasFree-Java-SDK-tmp
 
 gasFree-Java-SDK
-
+Generator gasFree Address from user address 
 ## How to use
 
 ```
@@ -13,3 +13,4 @@ implementation '    implementation 'com.github.TronLink:gasFree-Java-SDK:1.0.1@a
 ```
 
 ## Demo
+- [GasFreeGeneratorTest](./core/src/test/java/org/tron/gasfree/sdk/GasFreeGeneratorTest.java)

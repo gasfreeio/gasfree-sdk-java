@@ -13,6 +13,20 @@ import org.tron.walletserver.AddressUtil;
 import java.util.Arrays;
 
 public class GasFreeGenerator {
+    public static String generateGasFreeAddress(String userAddress){
+        return generateGasFreeAddress(userAddress,Constant.MainNetCode);
+    }
+    public static String generateGasFreeAddress(String userAddress, String chainId){
+        if(Constant.NileNetCode.equals(chainId)) {
+            return generateGasFreeAddress(userAddress, Constant.beaconAddressNile,Constant.GasFreeControllerAddressNile,Constant.creationCodeStr);
+        }else if(Constant.MainNetCode.equals(chainId)){
+            return generateGasFreeAddress(userAddress, Constant.beaconAddressRelease,Constant.GasFreeControllerAddressShasta,Constant.creationCodeStr);
+        }else if(Constant.ShastaNetCode.equals(chainId)){
+            return generateGasFreeAddress(userAddress, Constant.beaconAddressShasta,Constant.GasFreeControllerAddressShasta,Constant.creationCodeStr);
+        }else {
+            return generateGasFreeAddress(userAddress, Constant.beaconAddressRelease,Constant.GasFreeControllerAddressRelease,Constant.creationCodeStr);
+        }
+    }
 
     public static String generateGasFreeAddress(String user, String beanconAddress, String gasFreeContrallAddress, String creationCodeStr) {
         try {
@@ -53,7 +67,7 @@ public class GasFreeGenerator {
         return "";
     }
 
-    public static String generateHash(String eip712Message) {
+    public static String permitTransferMessageHash(String eip712Message) {
         try {
             StructuredDataEncoder dataEncoder = new StructuredDataEncoder(eip712Message);
             byte[] bytes = dataEncoder.hashDomain();

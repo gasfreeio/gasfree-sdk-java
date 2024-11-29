@@ -8,10 +8,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import org.tron.walletserver.AddressUtil;
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.tron.gasfree.GasFreeUtils;
+import org.tron.gasfree.sdk.GasFreeGenerator;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,10 +55,10 @@ public class MainActivity extends AppCompatActivity {
         btnGenerateGasFreeAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!TronAddressUtils.isValidTronAddress(userAddress)){
+                if(!AddressUtil.isAddressValid(userAddress)){
                     Toast.makeText(MainActivity.this,"",Toast.LENGTH_LONG).show();
                 }
-                String gasFreeAddress = GasFreeUtils.generateAddress(userAddress,beanconAddress,gasFreeContrallAddress,creationCodestr);
+                String gasFreeAddress = GasFreeGenerator.generateGasFreeAddress(userAddress,beanconAddress,gasFreeContrallAddress,creationCodestr);
                 tvGasFreeAddress.setText(gasFreeAddress);
             }
         });
