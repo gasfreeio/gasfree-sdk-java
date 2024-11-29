@@ -1,4 +1,4 @@
-package org.tron.gasfree;
+package org.tron.gasfree.sdk;
 
 import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
 import org.tron.common.bip32.Numeric;
@@ -8,12 +8,13 @@ import org.tron.common.crypto.StructuredDataEncoder;
 import org.tron.common.crypto.datatypes.Address;
 import org.tron.common.crypto.datatypes.DynamicBytes;
 import org.tron.common.utils.ByteArray;
+import org.tron.common.utils.LogUtils;
 import org.tron.walletserver.AddressUtil;
 import java.util.Arrays;
 
-public class GasFreeUtils {
+public class GasFreeGenerator {
 
-    public static String generateAddress(String user, String beanconAddress, String gasFreeContrallAddress, String creationCodeStr) {
+    public static String generateGasFreeAddress(String user, String beanconAddress, String gasFreeContrallAddress, String creationCodeStr) {
         try {
             byte[] salt = new byte[32];
             System.arraycopy(AddressUtil.decode58Check(user), 1, salt, 12, 20);
@@ -47,7 +48,7 @@ public class GasFreeUtils {
             String gasFreeAddress = AddressUtil.encode58Check(result);
             return gasFreeAddress;
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtils.e(e);
         }
         return "";
     }
@@ -65,7 +66,7 @@ public class GasFreeUtils {
             String hash = Numeric.toHexString(hashStructuredData);
             return hash;
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtils.e(e);
         }
         return "";
     }
