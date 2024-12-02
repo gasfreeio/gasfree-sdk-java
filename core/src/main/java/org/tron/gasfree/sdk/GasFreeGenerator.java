@@ -7,10 +7,14 @@ import org.tron.common.crypto.Hash;
 import org.tron.common.crypto.StructuredDataEncoder;
 import org.tron.common.crypto.datatypes.Address;
 import org.tron.common.crypto.datatypes.DynamicBytes;
+import org.tron.common.crypto.datatypes.Function;
 import org.tron.common.utils.ByteArray;
 import org.tron.common.utils.LogUtils;
+import org.tron.common.utils.abi.DataWord;
+import org.tron.config.Parameter;
 import org.tron.walletserver.AddressUtil;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class GasFreeGenerator {
     public static String generateGasFreeAddress(String userAddress){
@@ -30,36 +34,27 @@ public class GasFreeGenerator {
 
     public static String generateGasFreeAddress(String user, String beanconAddress, String gasFreeContrallAddress, String creationCodeStr) {
         try {
-            byte[] salt = new byte[32];
-            System.arraycopy(AddressUtil.decode58Check(user), 1, salt, 12, 20);
-
-            byte[] creationCode = ByteArray.fromHexString(creationCodeStr);
-
-            byte[] beacon = new byte[32];
-            System.arraycopy(AddressUtil.decode58Check(beanconAddress), 1, beacon, 12, 20);
-
-            byte[] selector = new byte[4];
-            System.arraycopy(Hash.sha3("initialize(address)".getBytes()), 0, selector, 0, 4);
-            byte[] initializeFun = ByteUtils.concatenate(selector, salt);
+            byte[] salt = byte32Address(user);
+            Function function = new Function(
+                    "initialize",
+                    Arrays.asList(new Address(AddressUtil.replace41Address(user))),
+                    Collections.emptyList());
+            String initializeFun = FunctionEncoder.encode(function);
 
             String encodeCall = FunctionEncoder.encodeConstructor(
                     Arrays.asList(new Address(AddressUtil.replace41Address(beanconAddress)),
-                            new DynamicBytes(initializeFun)));
-
+                            new DynamicBytes(ByteArray.fromHexString(initializeFun))));
+            byte[] creationCode = ByteArray.fromHexString(creationCodeStr);
             // encodePacked
             // cannot use FunctionEncoder.encodeConstructorPacked, because DynamicTypes packed function changed
             byte[] bytecodeHash = Hash.sha3(ByteUtils.concatenate(creationCode, ByteArray.fromHexString(encodeCall)));
 
             // create2
-            byte[] bytes = ByteUtils.concatenate(ByteArray.fromHexString("41"), ByteArray.fromHexString(AddressUtil.replace41Address(gasFreeContrallAddress)));
+            byte[] bytes = ByteUtils.concatenate(ByteArray.fromHexString(Parameter.CommonConstant.ADD_PRE_FIX_STRING), ByteArray.fromHexString(AddressUtil.replace41Address(gasFreeContrallAddress)));
             byte[] bytes1 = ByteUtils.concatenate(bytes, salt);
             byte[] bytes2 = ByteUtils.concatenate(bytes1, bytecodeHash);
-            byte[] bytes3 = Hash.sha3(bytes2);
-
-            byte[] result = new byte[21];
-            result[0] = 0x41;
-            System.arraycopy(bytes3, 12, result, 1, 20);
-            String gasFreeAddress = AddressUtil.encode58Check(result);
+            byte[] bytes3 = Hash.sha3omit12(bytes2);
+            String gasFreeAddress = AddressUtil.encode58Check(bytes3);
             return gasFreeAddress;
         } catch (Exception e) {
             LogUtils.e(e);
@@ -83,6 +78,15 @@ public class GasFreeGenerator {
             LogUtils.e(e);
         }
         return "";
+    }
+
+    private static byte[] byte32Address(String address) {
+        String value = AddressUtil.replace41Address(address);
+        byte[] addressBytes = ByteArray.fromHexString(value);
+        if (addressBytes == null) {
+            return null;
+        }
+        return new DataWord(addressBytes).getData();
     }
 }
 
