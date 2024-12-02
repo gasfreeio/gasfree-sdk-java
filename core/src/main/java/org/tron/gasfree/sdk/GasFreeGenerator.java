@@ -37,7 +37,7 @@ public class GasFreeGenerator {
             byte[] salt = byte32Address(user);
             Function function = new Function(
                     "initialize",
-                    Arrays.asList(new Address(AddressUtil.replace41Address(user))),
+                    Arrays.asList(new Address(user)),
                     Collections.emptyList());
             String initializeFun = FunctionEncoder.encode(function);
 
