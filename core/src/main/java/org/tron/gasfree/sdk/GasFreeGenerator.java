@@ -73,25 +73,8 @@ public class GasFreeGenerator {
 
             byte[] hashMessage = dataEncoder.hashMessage();
             String messageStr = Numeric.toHexString(hashMessage);
-            Gson gson = new Gson();
-            JsonObject data
-                    = gson.fromJson(eip712Message, JsonObject.class);
-            String message = data.get("message").toString();
-            GasFreeMessage object = gson.fromJson(message, GasFreeMessage.class);
-            if(object == null){
-                throw new Exception("Invalid input message");
-            }
-            if(!AddressUtil.isAddressValid(object.getToken())){
-                throw new AddressException("Invalid message.token: ${"+object.getToken() + "}, should be a valid Tron address");
-            }
-            if(!AddressUtil.isAddressValid(object.getUser())){
-                throw new AddressException("Invalid message.user: ${"+object.getUser() + "}, should be a valid Tron address");
-            }
-            if(!AddressUtil.isAddressValid(object.getReceiver())){
-                throw new AddressException("Invalid message.receiver: ${"+object.getReceiver() + "}, should be a valid Tron address");
-            }
-            if(!AddressUtil.isAddressValid(object.getServiceProvider())){
-                throw new AddressException("Invalid message.provider: ${"+object.getServiceProvider() + "}, should be a valid Tron address");
+            if(!ParamCheck.isValidParma(eip712Message)){
+                return "";
             }
             byte[] hashStructuredData = dataEncoder.hashStructuredData();
             String hash = Numeric.toHexString(hashStructuredData);
@@ -102,9 +85,6 @@ public class GasFreeGenerator {
         return "";
     }
 
-    public static boolean gasFreeParamCheck() {
-        return false;
-    }
 
     private static byte[] byte32Address(String address) {
         String value = AddressUtil.replace41Address(address);
