@@ -73,9 +73,7 @@ public class GasFreeGenerator {
 
         byte[] hashMessage = dataEncoder.hashMessage();
         String messageStr = Numeric.toHexString(hashMessage);
-        if(!ParamCheck.isValidParma(eip712Message)){
-            return "";
-        }
+        ParamCheck.isValidParma(eip712Message);
         byte[] hashStructuredData = dataEncoder.hashStructuredData();
         String hash = Numeric.toHexString(hashStructuredData);
         return hash;
