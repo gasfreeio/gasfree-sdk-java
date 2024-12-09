@@ -23,7 +23,12 @@ public class GasFreeGeneratorTest {
         String resourcePath = getClass().getClassLoader().getResource("eip712.json").getPath();
         File file = new File(resourcePath);
         String json = new BufferedReader((new FileReader(file))).lines().collect(Collectors.joining(""));
-        String eipHash  = GasFreeGenerator.permitTransferMessageHash(json);
+        String eipHash  = null;
+        try {
+            eipHash = GasFreeGenerator.permitTransferMessageHash(json);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         Assert.assertEquals("0x18cc1af5a367707a4b514cb37c5f9b5be568c5761d6caed614c98b2e4943b210",eipHash);
     }
 }

@@ -17,6 +17,7 @@ import org.tron.common.utils.abi.DataWord;
 import org.tron.config.Parameter;
 import org.tron.walletserver.AddressUtil;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -65,24 +66,19 @@ public class GasFreeGenerator {
         return "";
     }
 
-    public static String permitTransferMessageHash(String eip712Message) {
-        try {
-            StructuredDataEncoder dataEncoder = new StructuredDataEncoder(eip712Message);
-            byte[] bytes = dataEncoder.hashDomain();
-            String domainStr = Numeric.toHexString(bytes);
+    public static String permitTransferMessageHash(String eip712Message) throws Exception {
+        StructuredDataEncoder dataEncoder = new StructuredDataEncoder(eip712Message);
+        byte[] bytes = dataEncoder.hashDomain();
+        String domainStr = Numeric.toHexString(bytes);
 
-            byte[] hashMessage = dataEncoder.hashMessage();
-            String messageStr = Numeric.toHexString(hashMessage);
-            if(!ParamCheck.isValidParma(eip712Message)){
-                return "";
-            }
-            byte[] hashStructuredData = dataEncoder.hashStructuredData();
-            String hash = Numeric.toHexString(hashStructuredData);
-            return hash;
-        } catch (Exception e) {
-            LogUtils.e(e);
+        byte[] hashMessage = dataEncoder.hashMessage();
+        String messageStr = Numeric.toHexString(hashMessage);
+        if(!ParamCheck.isValidParma(eip712Message)){
+            return "";
         }
-        return "";
+        byte[] hashStructuredData = dataEncoder.hashStructuredData();
+        String hash = Numeric.toHexString(hashStructuredData);
+        return hash;
     }
 
 
