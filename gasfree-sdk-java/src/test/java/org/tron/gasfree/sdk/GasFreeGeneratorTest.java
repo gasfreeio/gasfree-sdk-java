@@ -31,4 +31,27 @@ public class GasFreeGeneratorTest {
         }
         Assert.assertEquals("0x18cc1af5a367707a4b514cb37c5f9b5be568c5761d6caed614c98b2e4943b210",eipHash);
     }
+
+    @Test
+    public void testGeneratorGasFreeMessageHashByParam() {
+        String chainId="3448148188";
+        String verifyingContract="TNtzqaE9p23tzpN1SHavUCCuzSwrzbHEHE";
+        String token="TXYZopYRdj2D9XRtbG411XZZ3kM5VkAeBf";
+        String serviceProvider="TQ6qStrS2ZJ96gieZJC8AurTxwqJETmjfp";
+        String user="TKtWbdzEq5ss9vTS9kwRhBp5mXmBfBns3E";
+        String receiver ="TQ6qStrS2ZJ96gieZJC8AurTxwqJETmjfp";
+        String value = "1000000";
+        String maxFee = "1000000";
+        long deadline = 1731066521;
+        long version = 1;
+        long nonce = 0;
+
+        String eipHash  = null;
+        try {
+            eipHash = GasFreeGenerator.permitTransferMessageHash(chainId,verifyingContract,token,serviceProvider,user,receiver,value,maxFee,deadline,version,nonce);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        Assert.assertEquals("0x18cc1af5a367707a4b514cb37c5f9b5be568c5761d6caed614c98b2e4943b210",eipHash);
+    }
 }
