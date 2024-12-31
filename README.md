@@ -19,19 +19,6 @@ Add dependency.
 ```
     implementation 'com.github.TronLink:gasFree-Java-SDK:1.0.0@aar'
 ```
-## Integrity Check
-gasFree-Java-SDK.aar is signed by the gpg key as below. You can use the gpg public key to verify the integrity of the officially released core library.
-  ```
-  pub: 7B910EA80207596075E6D7BA5D34F7A6550473BA
-  uid: build_tronlink <build@tronlink.org>
-  ```
-For example:
-  ```
-  #gpg --verify gasFree-Java-SDK-xxx.aar.asc gasFree-Java-SDK-xxx.aar
-  gpg: Signature made 一  7/29 16:03:14 2024 CST
-  gpg:                using RSA key 7B910EA80207596075E6D7BA5D34F7A6550473BA
-  gpg: Good signature from "build_tronlink <build@tronlink.org>"
-  ```
 ## Demo
 - [GasFreeGeneratorTest](./gasfree-sdk-java/src/test/java/org/tron/gasfree/sdk/GasFreeGeneratorTest.java)
 ## for generateGasFreeAddress
@@ -41,14 +28,14 @@ import gasfree sdk GasFreeGenerator class
 ```
 use generateGasFreeAddress with userAddress and general NetCode (et. Constant.MainNetCode 0x2b6653dc)
 ```
-String gasFreeAddress = GasFreeGenerator.generateGasFreeAddress(userAddress, Constant.MainNetCode);
+    String gasFreeAddress = GasFreeGenerator.generateGasFreeAddress(userAddress, Constant.MainNetCode);
 ```
 gasFreeAddress is your gasFree Address
 
 or more param
 use userAddress, beaconAddress,GasFreeControllerAddress and creationCodeStr
 ```
-GasFreeGenerator.generateGasFreeAddress(userAddress, Constant.beaconAddressRelease, Constant.GasFreeControllerAddressRelease, Constant.creationCodeStr);
+    GasFreeGenerator.generateGasFreeAddress(userAddress, Constant.beaconAddressRelease, Constant.GasFreeControllerAddressRelease, Constant.creationCodeStr);
 ```
 
 ## permitTransferMessageHash
