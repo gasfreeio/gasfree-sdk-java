@@ -1,9 +1,12 @@
 # gasFree-Java-SDK-tmp
-gasFree-SDK-Java is repo of TronLink
 
-Generate gasFree Address from User Address
+gasFree-SDK-Java is a comprehensive toolkit designed to streamline and simplify gasFree development by TronLink.
+This SDK provides a collection of utility classes and methods to enhance the efficiency and ease of implementing gasFree transactions in Java-based applications.
 
-Generate gasFree Eip712 Transfer Message Hash
+Key Features:
+- Generate gasFree Addresses from User Addresses
+- Generate gasFree EIP-712 Transfer Message Hash
+
 ## Requirements
 - Android 21+
 - Java 1.8+
