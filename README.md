@@ -1,7 +1,6 @@
-# gasFree-Java-SDK-tmp
+# Tronlink-gasFree-sdk-java
 
-gasFree-SDK-Java is a comprehensive toolkit designed to streamline and simplify gasFree development by TronLink.
-This SDK provides a collection of utility classes and methods to enhance the efficiency and ease of implementing gasFree transactions in Java-based applications.
+Tronlink-gasFree-sdk-java is a toolkit designed by TronLink to enable seamless integration with the gasFree transfer service. It offers a collection of utility classes and methods to streamline development and integration efficiency for Java-based apps.
 
 Key Features:
 - Generate gasFree Addresses from User Addresses
