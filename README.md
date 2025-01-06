@@ -1,6 +1,7 @@
 # tronlink-gasFree-sdk-java
 
 tronlink-gasFree-sdk-java is a toolkit designed by TronLink to enable seamless integration with the gasFree transfer service. It offers a collection of utility classes and methods to streamline development and integration efficiency for Java-based apps.
+
 Please note that this SDK is developed by TronLink and not officially provided by GasFree. For official information, please visit [gasfree.io](https://gasfee.io).
 
 Key Features:
@@ -11,12 +12,7 @@ Key Features:
 - Android 21+
 - Java 1.8+
 
-## Integrity Check
-The package files will be signed using a GPG key pair, and the correctness of the signature will be verified using the following public key:
-```
-  pub: 7B910EA80207596075E6D7BA5D34F7A6550473BA
-  uid: build_tronlink <build@tronlink.org>
-```
+
 ## Demo
 - [testGeneratorGasFreeAddress](./gasfree-sdk-java/src/test/java/org/tron/gasfree/sdk/GasFreeGeneratorTest.java)
 - [testGeneratorGasFreeMessageHash](./gasfree-sdk-java/src/test/java/org/tron/gasfree/sdk/GasFreeGeneratorTest.java)
@@ -67,3 +63,11 @@ You will get the GasFree Transfer Message Hash.
 or you just use the permitTransferMessageHash(eipJson) function.
 
 and more, you should sign the hash for real transaction.
+## Integrity Check
+The package files will be signed using a GPG key pair, and the correctness of the signature will be verified using the following public key:
+```
+  pub: 7B910EA80207596075E6D7BA5D34F7A6550473BA
+  uid: build_tronlink <build@tronlink.org>
+```
+## License
+This project is licensed under the Apache License Version 2.0 - see the LICENSE file for details
