@@ -5,7 +5,7 @@ Please note that this SDK is developed by TronLink and not officially provided b
 
 Key Features:
 - Generate gasFree Addresses from User Addresses
-- Generate gasFree EIP-712 Transfer Message Hash
+- Generate gasFree Transfer Message Hash
 
 ## Requirements
 - Android 21+
