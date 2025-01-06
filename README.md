@@ -1,6 +1,7 @@
-# Tronlink-gasFree-sdk-java
+# tronlink-gasFree-sdk-java
 
-Tronlink-gasFree-sdk-java is a toolkit designed by TronLink to enable seamless integration with the gasFree transfer service. It offers a collection of utility classes and methods to streamline development and integration efficiency for Java-based apps.
+tronlink-gasFree-sdk-java is a toolkit designed by TronLink to enable seamless integration with the gasFree transfer service. It offers a collection of utility classes and methods to streamline development and integration efficiency for Java-based apps.
+Please note that this SDK is developed by TronLink and not officially provided by GasFree. For official information, please visit gasfee.io.
 
 Key Features:
 - Generate gasFree Addresses from User Addresses
@@ -9,17 +10,17 @@ Key Features:
 ## Requirements
 - Android 21+
 - Java 1.8+
-## How to use
-Add the JitPack maven repository.
+
+## Integrity Check
+The package files will be signed using a GPG key pair, and the correctness of the signature will be verified using the following public key:
 ```
-    maven { url "https://jitpack.io"  }
-```
-Add dependency.
-```
-    implementation 'com.github.TronLink:gasFree-Java-SDK:1.0.0@aar'
+  pub: 7B910EA80207596075E6D7BA5D34F7A6550473BA
+  uid: build_tronlink <build@tronlink.org>
 ```
 ## Demo
-- [GasFreeGeneratorTest](./gasfree-sdk-java/src/test/java/org/tron/gasfree/sdk/GasFreeGeneratorTest.java)
+- [testGeneratorGasFreeAddress](./gasfree-sdk-java/src/test/java/org/tron/gasfree/sdk/GasFreeGeneratorTest.java)
+- [testGeneratorGasFreeMessageHash](./gasfree-sdk-java/src/test/java/org/tron/gasfree/sdk/GasFreeGeneratorTest.java)
+- [testGeneratorGasFreeMessageHashByParam](./gasfree-sdk-java/src/test/java/org/tron/gasfree/sdk/GasFreeGeneratorTest.java)
 ## for generateGasFreeAddress
 import gasfree sdk GasFreeGenerator class
 ```

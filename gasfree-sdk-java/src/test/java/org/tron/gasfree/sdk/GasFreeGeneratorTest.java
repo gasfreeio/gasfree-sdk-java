@@ -34,7 +34,7 @@ public class GasFreeGeneratorTest {
 
     @Test
     public void testGeneratorGasFreeMessageHashByParam() {
-        String chainId="3448148188";
+        String chainId="3448148188";// nile test
         String verifyingContract="TNtzqaE9p23tzpN1SHavUCCuzSwrzbHEHE";
         String token="TXYZopYRdj2D9XRtbG411XZZ3kM5VkAeBf";
         String serviceProvider="TQ6qStrS2ZJ96gieZJC8AurTxwqJETmjfp";
