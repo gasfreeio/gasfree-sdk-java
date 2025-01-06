@@ -1,4 +1,4 @@
-# tronlink-gasFree-sdk-java
+# tronlink-gasfree-sdk-java
 
 tronlink-gasFree-sdk-java is a toolkit designed by TronLink to enable seamless integration with the gasFree transfer service. It offers a collection of utility classes and methods to streamline development and integration efficiency for Java-based apps.
 
