@@ -35,7 +35,7 @@ use userAddress, beaconAddress,GasFreeControllerAddress and creationCodeStr
 ```
 
 ## permitTransferMessageHash
-### generate GasFree EIP 712 sign hash
+### generate GasFree Message hash
 import gasfree sdk GasFreeGenerator class
 ```
 - import org.tron.gasfree.sdk.GasFreeGenerator;
