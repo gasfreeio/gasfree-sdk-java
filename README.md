@@ -70,4 +70,4 @@ The package files will be signed using a GPG key pair, and the correctness of th
   uid: build_tronlink <build@tronlink.org>
 ```
 ## License
-This project is licensed under the Apache License Version 2.0 - see the LICENSE file for details
+This project is licensed under the Apache License Version 2.0 - see the [LICENSE file](LICENSE) for details
