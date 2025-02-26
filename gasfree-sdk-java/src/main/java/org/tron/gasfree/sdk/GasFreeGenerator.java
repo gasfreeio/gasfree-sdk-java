@@ -30,11 +30,11 @@ public class GasFreeGenerator {
         if (Constant.NileNetCode.equals(chainId)) {
             return generateGasFreeAddress(userAddress, Constant.beaconAddressNile, Constant.GasFreeControllerAddressNile, Constant.creationCodeStr);
         } else if (Constant.MainNetCode.equals(chainId)) {
-            return generateGasFreeAddress(userAddress, Constant.beaconAddressRelease, Constant.GasFreeControllerAddressShasta, Constant.creationCodeStr);
+            return generateGasFreeAddress(userAddress, Constant.beaconAddressRelease, Constant.GasFreeControllerAddressShasta, Constant.creationCodeStrRelease);
         } else if (Constant.ShastaNetCode.equals(chainId)) {
             return generateGasFreeAddress(userAddress, Constant.beaconAddressShasta, Constant.GasFreeControllerAddressShasta, Constant.creationCodeStr);
         } else {
-            return generateGasFreeAddress(userAddress, Constant.beaconAddressRelease, Constant.GasFreeControllerAddressRelease, Constant.creationCodeStr);
+            return generateGasFreeAddress(userAddress, Constant.beaconAddressRelease, Constant.GasFreeControllerAddressRelease, Constant.creationCodeStrRelease);
         }
     }
 
