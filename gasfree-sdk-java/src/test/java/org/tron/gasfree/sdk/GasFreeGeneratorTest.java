@@ -15,7 +15,7 @@ public class GasFreeGeneratorTest {
     @Test
     public void testGeneratorGasFreeAddress() {
         String gasFreeAddress = GasFreeGenerator.generateGasFreeAddress(userAddress, Constant.NileNetCode);
-        Assert.assertEquals("TNXEYu8LmxdGqjgF9SgpeEgXV2aAhhsYcv", gasFreeAddress);
+        Assert.assertEquals("TK6eT5fDon22MM6tf1UDwgRySkNEybNLmw", gasFreeAddress);
     }
 
     @Test
