@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MainActivity">
+    <TextView
+        android:id="@+id/tv_eancon_address_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="beanconAddress"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/tv_beancon_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintTop_toBottomOf="@+id/tv_eancon_address_label"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/tv_creation_codestr_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="creation_codestr"
+        app:layout_constraintTop_toBottomOf="@+id/tv_beancon_address"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/tv_creation_codestr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:maxLines="3"
+        android:ellipsize="end"
+        app:layout_constraintTop_toBottomOf="@+id/tv_creation_codestr_label"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/tv_gas_free_contrall_address_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="gas_free_contrall_address"
+        app:layout_constraintTop_toBottomOf="@+id/tv_creation_codestr"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/tv_gas_free_contrall_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintTop_toBottomOf="@+id/tv_gas_free_contrall_address_label"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+    <TextView
+        android:id="@+id/tv_user_address_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="userAddress"
+        app:layout_constraintTop_toBottomOf="@+id/tv_gas_free_contrall_address"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+    <EditText
+        android:id="@+id/et_user_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintTop_toBottomOf="@+id/tv_user_address_label"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+    <Button
+        android:id="@+id/btn_generate_gas_free_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/et_user_address"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="generate_gas_free_address"
+        />
+
+    <TextView
+        android:id="@+id/tv_tv_gas_free_address_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="gas_free_contrall_address"
+        app:layout_constraintTop_toBottomOf="@+id/btn_generate_gas_free_address"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/tv_gas_free_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintTop_toBottomOf="@+id/tv_tv_gas_free_address_label"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>
