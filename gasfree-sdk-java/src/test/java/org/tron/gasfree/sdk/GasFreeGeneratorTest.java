@@ -14,8 +14,8 @@ public class GasFreeGeneratorTest {
 
     @Test
     public void testGeneratorGasFreeAddress() {
-        String gasFreeAddress = GasFreeGenerator.generateGasFreeAddress(userAddress, Constant.NileNetCode);
-        Assert.assertEquals("TK6eT5fDon22MM6tf1UDwgRySkNEybNLmw", gasFreeAddress);
+        String gasFreeAddress = GasFreeGenerator.generateGasFreeAddress(userAddress, Constant.MainNetCode);
+        Assert.assertEquals("TLQqSBqRPEeGc5PEiQizE9cocHfhcfg9tL", gasFreeAddress);
     }
 
     @Test
@@ -23,28 +23,30 @@ public class GasFreeGeneratorTest {
         String resourcePath = getClass().getClassLoader().getResource("eip712.json").getPath();
         File file = new File(resourcePath);
         String json = new BufferedReader((new FileReader(file))).lines().collect(Collectors.joining(""));
+        System.out.println(json);
         String eipHash  = null;
         try {
             eipHash = GasFreeGenerator.permitTransferMessageHash(json);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        Assert.assertEquals("0x18cc1af5a367707a4b514cb37c5f9b5be568c5761d6caed614c98b2e4943b210",eipHash);
+        Assert.assertEquals("0x4e0e1444d20768c286b9de66064e4e7311b5160871c8c0292ffeac9a16265622",eipHash);
     }
 
     @Test
     public void testGeneratorGasFreeMessageHashByParam() {
-        String chainId="3448148188";// nile test
-        String verifyingContract="TNtzqaE9p23tzpN1SHavUCCuzSwrzbHEHE";
-        String token="TXYZopYRdj2D9XRtbG411XZZ3kM5VkAeBf";
-        String serviceProvider="TQ6qStrS2ZJ96gieZJC8AurTxwqJETmjfp";
-        String user="TKtWbdzEq5ss9vTS9kwRhBp5mXmBfBns3E";
-        String receiver ="TQ6qStrS2ZJ96gieZJC8AurTxwqJETmjfp";
-        String value = "1000000";
-        String maxFee = "1000000";
-        long deadline = 1731066521;
+
+        String chainId="728126428";
+        String verifyingContract="TFFAMQLZybALaLb4uxHA9RBE7pxhUAjF3U";
+        String token="TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t";
+        String serviceProvider="TLntW9Z59LYY5KEi9cmwk3PKjQga828ird";
+        String user="TFDP1vFeSYPT6FUznL7zUjhg5X7p2AA8vw";
+        String receiver ="TSPrmJetAMo6S6RxMd4tswzeRCFVegBNig";
+        String value = "20000000";
+        String maxFee = "20000000";
+        long deadline = 1740641152;
         long version = 1;
-        long nonce = 0;
+        long nonce = 1;
 
         String eipHash  = null;
         try {
@@ -52,6 +54,6 @@ public class GasFreeGeneratorTest {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        Assert.assertEquals("0x18cc1af5a367707a4b514cb37c5f9b5be568c5761d6caed614c98b2e4943b210",eipHash);
+        Assert.assertEquals("0x4e0e1444d20768c286b9de66064e4e7311b5160871c8c0292ffeac9a16265622",eipHash);
     }
 }

@@ -1,19 +1,19 @@
 {
   "domain": {
-    "chainId": 3448148188,
+    "chainId": "728126428",
     "name": "GasFreeController",
-    "verifyingContract": "TNtzqaE9p23tzpN1SHavUCCuzSwrzbHEHE",
+    "verifyingContract": "TFFAMQLZybALaLb4uxHA9RBE7pxhUAjF3U",
     "version": "V1.0.0"
   },
   "message": {
-    "deadline": 1731066521,
-    "maxFee": 1000000,
-    "nonce": 0,
-    "receiver": "TQ6qStrS2ZJ96gieZJC8AurTxwqJETmjfp",
-    "serviceProvider": "TQ6qStrS2ZJ96gieZJC8AurTxwqJETmjfp",
-    "token": "TXYZopYRdj2D9XRtbG411XZZ3kM5VkAeBf",
-    "user": "TKtWbdzEq5ss9vTS9kwRhBp5mXmBfBns3E",
-    "value": 1000000,
+    "deadline": 1740641152,
+    "maxFee": "20000000",
+    "nonce": 1,
+    "receiver": "TSPrmJetAMo6S6RxMd4tswzeRCFVegBNig",
+    "serviceProvider": "TLntW9Z59LYY5KEi9cmwk3PKjQga828ird",
+    "token": "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t",
+    "user": "TFDP1vFeSYPT6FUznL7zUjhg5X7p2AA8vw",
+    "value": "20000000",
     "version":1
   },
   "primaryType": "PermitTransfer",
