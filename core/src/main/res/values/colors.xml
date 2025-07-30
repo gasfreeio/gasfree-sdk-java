@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="transparent">#00000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="white_30">#4Dffffff</color>
+    <color name="black">#000000</color>
+    <color name="gray_772">#666666</color>
+    <color name="black_50">#515060</color>
+    <color name="black_02">#021C31</color>
+    <color name="black_02_60">#990E0F11</color>
+    <color name="gray_6602">#66021C31</color>
+    <color name="blue_72">#7278c5</color>
+    <color name="gray_ee">#eeeeee</color>
+    <color name="white_F7">#F7F8FA</color>
+    <color name="black_505">#505160</color>
+    <color name="gray_C2">#C2C8D5</color>
+    <color name="blue_63">#636ACC</color>
+    <color name="gray_88">#888998</color>
+    <color name="gray_02_10">#1a021C31</color>
+    <color name="black_02_30">#021C31</color>
+    <color name="gray_02_20">#33021C31</color>
+    <color name="black_0E_70">#B30E0F11</color>
+    <color name="toast_232c41_90">#E6232C41</color>
+    <color name="gray_F7F8">#F7F8FA</color>
+    <color name="ripple_gray_eb">#EBEDF0</color>
+    <color name="ripple_gray_88">#888998</color>
+
+    <color name="gray_b3_50">#26B3BAC1</color>
+    <color name="gray_cdd1da">#CDD1DA</color>
+    <color name="gray_232c41">#232C41</color>
+    <color name="gray_6D778C">#6D778C</color>
+    <color name="black_23_70">#33232C41</color>
+</resources>

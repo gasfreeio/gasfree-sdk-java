@@ -1,0 +1,127 @@
+<resources>
+
+
+    <string name="ip_key" translatable="false">ip</string>
+    <string name="client_id_key" translatable="false">client_id</string>
+    <string name="port_key" translatable="false">port</string>
+    <string name="ip_sol_key" translatable="false">ip_sol</string>
+    <string name="port_sol_key" translatable="false">port_sol</string>
+    <string name="dapp_to_main_fee_key" translatable="false">dapp_to_main_fee</string>
+
+    <string name="mnemonic_key" translatable="false">mnemonic_key</string>
+    <string name="selected_wallet_key" translatable="false">selected_wallet_key</string>
+    <string name="selected_shield_wallet_key" translatable="false">selected_shield_wallet_key</string>
+
+    <string name="wallets_key" translatable="false">wallets_key</string>
+    <string name="name_key" translatable="false">name_key</string>
+
+    <string name="account_bytes_key" translatable="false">account_bytes_key</string>
+    <string name="balance_key" translatable="false">balance_key</string>
+
+    <string name="net_limit_key" translatable="false">net_limit_key</string>
+    <string name="net_used_key" translatable="false">net_used_key</string>
+    <string name="net_free_limit_key" translatable="false">net_free_limit_key</string>
+    <string name="net_free_used_key" translatable="false">net_free_used_key</string>
+    <string name="total_energy_limit_key" translatable="false">total_energy_limit_key</string>
+    <string name="total_energy_weight_key" translatable="false">total_energy_weight_key</string>
+    <string name="total_net_limit_key" translatable="false">total_net_limit_key</string>
+    <string name="total_net_weight_key" translatable="false">total_net_weight_key</string>
+
+
+
+
+    <string name="mac_address" translatable="false">mac_address</string>
+    <string name="dapp_name" translatable="false">dapp_name</string>
+    <string name="price_key" translatable="false">price_key</string>
+    <string name="language_key" translatable="false">language_key</string>
+    <string name="is_customfull_key" translatable="false">is_customfull_key</string>
+    <string name="is_custom_sol_key" translatable="false">is_customsol_key</string>
+    <string name="customfull_key" translatable="false">customfull_key</string>
+    <string name="customsol_key" translatable="false">customsol_key</string>
+    <string name="is_DappChain_customfull_key" translatable="false">is_DappChain_customfull_key</string>
+    <string name="is_DappChain_custom_sol_key" translatable="false">is_DappChain_customsol_key</string>
+    <string name="DappChain_customfull_key" translatable="false">DappChain_customfull_key</string>
+    <string name="DappChain_customsol_key" translatable="false">DappChain_customsol_key</string>
+
+    <string name="is_first" translatable="false">is_first</string>
+    <string name="is_first_market" translatable="false">is_first_market</string>
+    <string name="is_first_usdt" translatable="false">is_first_usdt</string>
+    <string name="fullnodes_key" translatable="false">fullnodes_key</string>
+    <string name="fullnodes_all_key" translatable="false">fullnodes_all_key</string>
+    <string name="solnodes_key" translatable="false">solnodes_key</string>
+    <string name="test_key" translatable="false">test_key</string>
+    <string name="new_price_key" translatable="false">new_price_key</string>
+    <string name="usd_to_rmb" translatable="false">usd_to_rmb</string>
+
+    <string name="clod_key" translatable="false">cold_key</string>
+    <string name="latest_version_key" translatable="false">latest_version_key</string>
+    <string name="splash_png_key" translatable="false">splash_png_key</string>
+    <string name="energy_limit_key" translatable="false">energy_limit_key</string>
+    <string name="energy_used_key" translatable="false">energy_used_key</string>
+    <string name="set_trc10_key" translatable="false">set_trc10_key</string>
+    <string name="set_alltrc10_key" translatable="false">set_alltrc10_key</string>
+    <string name="set_trc20_key" translatable="false">set_trc20_key</string>
+    <string name="set_alltrc20_key" translatable="false">set_alltrc20_key</string>
+    <string name="set_hasaccount_key" translatable="false">set_hasaccount_key</string>
+    <string name="set_assetslist_key" translatable="false">set_assetslist_key</string>
+
+    <string name="en_teleurl_key" translatable="false">en_teleurl_key</string>
+    <string name="zh_teleurl_key" translatable="false">zh_teleurl_key</string>
+    <string name="twitterurl_key" translatable="false">twitterurl_key</string>
+    <string name="wechaturl_key" translatable="false">wechaturl_key</string>
+    <string name="is_first_vote_freeze_key" translatable="false">is_first_vote_freeze_key></string>
+    <string name="update_version_key" translatable="false">update_version_key></string>
+
+    <string name="is_pwd_input_key" translatable="false">is_pwd_input_key></string>
+    <string name="local_dapp_search_key" translatable="false">local_dapp_search_key></string>
+
+    <string name="cold_nonet_tip_closed" translatable="false">cold_nonet_tip_closed></string>
+    <string name="chain_name_key" translatable="false">chain_name_key></string>
+    <string name="test_version_key" translatable="false">test_version_key</string>
+    <string name="last_test_version_key" translatable="false">last_test_version_key</string>
+    <string name="notice_key" translatable="false">notice_key</string>
+    <string name="not_nile_chain_notice_times" translatable="false">not_nile_chain_notice_times</string>
+
+
+
+    <string name="node_key" translatable="false">node_key></string>
+    <string name="all_chain_key" translatable="false">all_chain_key></string>
+    <string name="last_all_chain_key" translatable="false">last_all_chain_key></string>
+    <string name="set_mainnodelist_key" translatable="false">set_mainnodelist_key</string>
+    <string name="set_customnodelist_key" translatable="false">set_customnodelist_key</string>
+
+
+    <string name="form_qr1">Album</string>
+
+    <string name="loading">loading...</string>
+    <string name="loading2">loading...</string>
+    <string name="network_busy">unstable network connection...</string>
+    <string name="reload">Reload</string>
+    <string name="net_error">Unstable network connection</string>
+    <string name="no_dapp">There is no DApp information yet</string>
+    <string name="nodata">No data</string>
+    <string name="create_transaction_fail">Transaction generation failed</string>
+    <string name="head_skip">skip</string>
+
+    <string name="samsung_seed_hash" translatable="false">samsung_seed_hash</string>
+    <string name="samsung_hd_mapping" translatable="false">samsung_hd_mapping</string>
+    <string name="shield20_decimals" translatable="false">shield20_decimals</string>
+    <string name="cold_wallet_select" translatable="false">cold_wallet_select</string>
+
+    <string name="market_banner_cache" translatable="false">market_banner_cache</string>
+    <string name="transaction_localhistory_key" translatable="false">transaction_localhistory_key</string>
+
+    <string name="dappjs_key" translatable="false">dappjs_key</string>
+    <string name="dappjs_sun_key" translatable="false">dappjs_sun_key</string>
+    <string name="dappjs_url_key" translatable="false">dappjs_url_key</string>
+    <string name="dappjs_sun_url_key" translatable="false">dappjs_sun_url_key</string>
+    <string name="dappjs_output_key" translatable="false">dappjs_output_key</string>
+    <string name="qr_multi_image" translatable="false">qr_multi_image</string>
+
+    <string name="block_time_interval_key" translatable="false">block_time_interval_key</string>
+    <string name="recent_transfer_address_key" translatable="false">recent_transfer_address</string>
+    <string name="recent_send_address_key" translatable="false">recent_send_address</string>
+    <string name="receive_notification_key" translatable="false">receive_notification_key</string>
+
+
+</resources>

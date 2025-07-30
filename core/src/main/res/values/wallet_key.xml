@@ -1,0 +1,42 @@
+<resources>
+
+    <string name="is_cold_wallet_key" translatable="false">is_cold_wallet_key</string>
+
+    <string name="wallet_name_key" translatable="false">wallet_name_key</string>
+
+    <string name="pwd_key" translatable="false">pwd_key</string>
+
+    <string name="wallet_address_key" translatable="false">wallet_address_key</string>
+
+    <string name="backup_key" translatable="false">backup_key</string>
+
+    <string name="wallet_icon_key" translatable="false">wallet_icon_key</string>
+
+    <string name="wallet_createtype_key" translatable="false">wallet_createtype_key</string>
+
+    <string name="wallet_createtime_key" translatable="false">wallet_createtime_key</string>
+
+    <string name="wallet_keystore_key" translatable="false">wallet_keystore_key</string>
+
+    <!--<string name="wallet_color_key">wallet_color_key</string>-->
+    <!--  3.0.0刘斌移除旧版本颜色记录 同key不同value-->
+    <string name="wallet_color_key" translatable="false">wallet_color_new_key</string>
+
+    <string name="mnemonic_length" translatable="false">mnemonic_length></string>
+
+    <string name="pub_key" translatable="false">pub_key</string>
+
+    <string name="priv_key" translatable="false">priv_key</string>
+
+    <string name="isshield_key" translatable="false">isshield_key</string>
+
+    <string name="is_watch_only_setup_key" translatable="false">is_watch_only_setup_key</string>
+
+    <string name="shield__ob_key" translatable="false">shield__ob_key</string>
+
+    <string name="wallet_newmnemonic_key" translatable="false">wallet_newmnemonic_key</string>
+
+    <string name="wallet_mnemonicpath_key" translatable="false">wallet_mnemonicpath_key</string>
+
+
+</resources>
