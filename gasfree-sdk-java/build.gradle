@@ -86,8 +86,8 @@ publishing {
         aar(MavenPublication) {
             groupId 'org.tron'
             version = "${android.defaultConfig.versionName}"
-            artifactId 'tronlink-core'
-            artifact("$buildDir/outputs/aar/core-release.aar")
+            artifactId 'gasfree-sdk-java'
+            artifact("$buildDir/outputs/aar/gasfree-sdk-release.aar")
         }
     }
     repositories {
