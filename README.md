@@ -1,8 +1,11 @@
-# tronlink-gasfree-sdk-java
+# gasfree-sdk-java
 
-tronlink-gasfree-sdk-java is a toolkit developed by TronLink based on the GasFree API specification. It facilitates the integration of the non-gas TRC20 token transfer service for the android platform.
+gasfree-sdk-java is a toolkit developed based on the GasFree API specification,
+It facilitates the integration of the non-gas TRC20 token transfer service for the android platform.
 
-This SDK is provided by TronLink, while the definition & maintenance of the APIs are managed by the official GasFree project. For more information, visit [gasfree.io](gasfree.io).
+Originally developed by TronLink and hosted at https://github.com/TronLink/tronlink-gasfree-sdk-java, this SDK is now maintained and continuously updated by the gasfree.io developer community.
+
+For more information, visit [gasfree.io](gasfree.io).
 
 
 Key Features:
@@ -65,11 +68,5 @@ You will get the GasFree Transfer Message Hash.
 or you just use the permitTransferMessageHash(eipJson) function.
 
 and more, you should sign the hash for real transaction.
-## Integrity Check
-The package files will be signed using a GPG key pair, and the correctness of the signature will be verified using the following public key:
-```
-  pub: 7B910EA80207596075E6D7BA5D34F7A6550473BA
-  uid: build_tronlink <build@tronlink.org>
-```
 ## License
 This project is licensed under the Apache License Version 2.0 - see the [LICENSE](LICENSE) file for details
