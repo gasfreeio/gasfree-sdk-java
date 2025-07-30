@@ -4,14 +4,18 @@ apply plugin: 'maven-publish'
 
 
 android {
-    compileSdkVersion 33
+    compileSdk 34
+    namespace = "org.tron"
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 33
-        versionCode 3
-        versionName "1.2"
+        targetSdkVersion 34
+        versionCode 5
+        versionName "1.1.0"
         multiDexEnabled true
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        aarMetadata {
+            minCompileSdk = 21
+        }
     }
     dexOptions {
         javaMaxHeapSize "4g"
@@ -76,7 +80,7 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
-    implementation 'com.github.TronLink:tronlink-android-core:1.0.2@aar'
+    implementation 'com.github.TronLink:tronlink-android-core:1.0.6@aar'
 
 }
 
@@ -87,16 +91,9 @@ publishing {
             groupId 'org.tron'
             version = "${android.defaultConfig.versionName}"
             artifactId 'gasfree-sdk-java'
-            artifact("$buildDir/outputs/aar/gasfree-sdk-release.aar")
-        }
-    }
-    repositories {
-        maven {
-            url "http://3.136.94.196:8081/repository/maven-releases/"
-            allowInsecureProtocol true
-            credentials {
-                username  System.getenv("REPO_USERNAME")
-                password  System.getenv("REPO_PASSWORD")
+            print(components)
+            afterEvaluate {
+                from components.release
             }
         }
     }
