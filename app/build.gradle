@@ -4,6 +4,7 @@ apply plugin: 'com.google.protobuf'
 
 android {
     compileSdkVersion 33
+    namespace "org.tron.gasfree.example"
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 33
@@ -60,8 +61,6 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
-
-    implementation 'org.bouncycastle:bcprov-jdk15on:1.69'
 
 
 

@@ -1,11 +1,13 @@
-apply plugin: 'com.android.library'
-apply plugin: 'com.google.protobuf'
-apply plugin: 'maven-publish'
-
-
+plugins {
+    id ("com.android.library")
+    id ("maven-publish")
+    id("org.jetbrains.kotlin.android")
+    id ("com.google.protobuf")
+}
+group = 'org.tron'
 android {
     compileSdk 34
-    namespace = "org.tron"
+    namespace = "org.tron.gasfree"
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 34
@@ -36,11 +38,11 @@ android {
         abortOnError false
     }
 }
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
-}
+//repositories {
+//    flatDir {
+//        dirs 'libs'
+//    }
+//}
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     //noinspection GradleCompatible
@@ -62,7 +64,7 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.5'
     implementation 'androidx.multidex:multidex:2.0.0'
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
-    implementation 'org.bouncycastle:bcprov-jdk15on:1.69'
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.78.1'
 
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
@@ -87,8 +89,8 @@ dependencies {
 publishing {
 
     publications {
-        aar(MavenPublication) {
-            groupId 'org.tron'
+        release(MavenPublication) {
+            groupId 'org.tron.gasfree'
             version = "${android.defaultConfig.versionName}"
             artifactId 'gasfree-sdk-java'
             print(components)
