@@ -1,6 +1,5 @@
 package org.tron.gasfree.sdk;
 
-import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
 import org.tron.common.bip32.Numeric;
 import org.tron.common.crypto.FunctionEncoder;
 import org.tron.common.crypto.Hash;
@@ -53,12 +52,12 @@ public class GasFreeGenerator {
             byte[] creationCode = ByteArray.fromHexString(creationCodeStr);
             // encodePacked
             // cannot use FunctionEncoder.encodeConstructorPacked, because DynamicTypes packed function changed
-            byte[] bytecodeHash = Hash.sha3(ByteUtils.concatenate(creationCode, ByteArray.fromHexString(encodeCall)));
+            byte[] bytecodeHash = Hash.sha3( org.bouncycastle.util.Arrays.concatenate(creationCode, ByteArray.fromHexString(encodeCall)));
 
             // create2
-            byte[] bytes = ByteUtils.concatenate(ByteArray.fromHexString(Parameter.CommonConstant.ADD_PRE_FIX_STRING), ByteArray.fromHexString(AddressUtil.replace41Address(gasFreeControlAddress)));
-            byte[] bytes1 = ByteUtils.concatenate(bytes, salt);
-            byte[] bytes2 = ByteUtils.concatenate(bytes1, bytecodeHash);
+            byte[] bytes =  org.bouncycastle.util.Arrays.concatenate(ByteArray.fromHexString(Parameter.CommonConstant.ADD_PRE_FIX_STRING), ByteArray.fromHexString(AddressUtil.replace41Address(gasFreeControlAddress)));
+            byte[] bytes1 =  org.bouncycastle.util.Arrays.concatenate(bytes, salt);
+            byte[] bytes2 =  org.bouncycastle.util.Arrays.concatenate(bytes1, bytecodeHash);
             byte[] bytes3 = Hash.sha3omit12(bytes2);
             String gasFreeAddress = AddressUtil.encode58Check(bytes3);
             return gasFreeAddress;
