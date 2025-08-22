@@ -17,6 +17,15 @@ Key Features:
 - Android 21+
 - Java 1.8+
 
+## How to use
+Add the JitPack maven repository.
+```
+maven { url "https://jitpack.io"  }
+```
+Add dependency.
+```
+implementation 'com.github.Gasfreeio:gasfree-sdk:1.1.0@aar'
+```
 
 ## Demo
 - [testGeneratorGasFreeAddress](./gasfree-sdk-java/src/test/java/org/tron/gasfree/sdk/GasFreeGeneratorTest.java)
