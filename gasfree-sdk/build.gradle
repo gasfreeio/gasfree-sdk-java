@@ -90,7 +90,7 @@ publishing {
 
     publications {
         release(MavenPublication) {
-            groupId = 'com.github.slo-w'
+            groupId = 'com.github.Gasfreeio'
             version = "${android.defaultConfig.versionName}"
             artifactId 'gasfree-sdk'
             print(components)
