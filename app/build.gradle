@@ -48,7 +48,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel:2.0.0'
     implementation 'androidx.navigation:navigation-fragment:2.0.0-rc02'
     implementation 'androidx.navigation:navigation-ui:2.0.0-rc02'
-    implementation project(':gasfree-sdk-java')
+    implementation project(':gasfree-sdk')
     implementation 'com.google.code.gson:gson:2.2.4'
     implementation 'com.alibaba:fastjson:1.2.78'
     implementation 'com.github.TronLink:tronlink-android-core:1.0.6@aar'

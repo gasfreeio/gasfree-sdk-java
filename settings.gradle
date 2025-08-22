@@ -1,5 +1,5 @@
 include ':app'
-include ':gasfree-sdk-java'
+include ':gasfree-sdk'
 
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
