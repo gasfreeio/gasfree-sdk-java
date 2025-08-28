@@ -139,13 +139,13 @@ public class GasFreeGenerator {
         return permitTransferMessageHash(jsonString);
     }
     public static String permitTransferMessageHash(String eip712Message) throws Exception {
+        ParamCheck.isValidParma(eip712Message);
         StructuredDataEncoder dataEncoder = new StructuredDataEncoder(eip712Message);
         byte[] bytes = dataEncoder.hashDomain();
         String domainStr = Numeric.toHexString(bytes);
 
         byte[] hashMessage = dataEncoder.hashMessage();
         String messageStr = Numeric.toHexString(hashMessage);
-        ParamCheck.isValidParma(eip712Message);
         byte[] hashStructuredData = dataEncoder.hashStructuredData();
         String hash = Numeric.toHexString(hashStructuredData);
         return hash;

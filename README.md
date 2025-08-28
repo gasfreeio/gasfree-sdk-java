@@ -3,9 +3,7 @@
 gasfree-sdk-java is a toolkit developed based on the GasFree API specification,
 It facilitates the integration of the non-gas TRC20 token transfer service for the android platform.
 
-Originally developed by TronLink and hosted at https://github.com/TronLink/tronlink-gasfree-sdk-java, this SDK is now maintained and continuously updated by the gasfree.io developer community.
-
-For more information, visit [gasfree.io](gasfree.io).
+This SDK is maintained by the gasfree.io developer community. For more information, visit [gasfree.io](gasfree.io).
 
 
 Key Features:
@@ -17,6 +15,15 @@ Key Features:
 - Android 21+
 - Java 1.8+
 
+## How to use
+Add the JitPack maven repository.
+```
+maven { url "https://jitpack.io"  }
+```
+Add dependency.
+```
+implementation 'com.github.Gasfreeio:gasfree-sdk:1.1.0@aar'
+```
 
 ## Demo
 - [testGeneratorGasFreeAddress](./gasfree-sdk-java/src/test/java/org/tron/gasfree/sdk/GasFreeGeneratorTest.java)
