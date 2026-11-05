@@ -40,18 +40,18 @@ public class GasFreeGenerator {
 
     public static String generateGasFreeAddress(String user, String beaconAddress, String gasFreeControlAddress, String creationCodeStr) {
         try {
-            ParamCheck.normalizeAddress(user);
-            ParamCheck.normalizeAddress(beaconAddress);
-            ParamCheck.normalizeAddress(gasFreeControlAddress);
+            user = ParamCheck.normalizeAddress(user);
+            beaconAddress = ParamCheck.normalizeAddress(beaconAddress);
+            gasFreeControlAddress = ParamCheck.normalizeAddress(gasFreeControlAddress);
             byte[] salt = byte32Address(user);
             Function function = new Function(
                     "initialize",
-                    Arrays.asList(new Address(user)),
+                    Arrays.asList(new Address(new BigInteger(user.substring(2), 16))),
                     Collections.emptyList());
             String initializeFun = FunctionEncoder.encode(function);
 
             String encodeCall = FunctionEncoder.encodeConstructor(
-                    Arrays.asList(new Address(AddressUtil.replace41Address(beaconAddress)),
+                    Arrays.asList(new Address(new BigInteger(beaconAddress.substring(2), 16)),
                             new DynamicBytes(ByteArray.fromHexString(initializeFun))));
             byte[] creationCode = ByteArray.fromHexString(creationCodeStr);
             // encodePacked
@@ -59,7 +59,7 @@ public class GasFreeGenerator {
             byte[] bytecodeHash = Hash.sha3(org.bouncycastle.util.Arrays.concatenate(creationCode, ByteArray.fromHexString(encodeCall)));
 
             // create2
-            byte[] bytes = org.bouncycastle.util.Arrays.concatenate(ByteArray.fromHexString(Parameter.CommonConstant.ADD_PRE_FIX_STRING), ByteArray.fromHexString(AddressUtil.replace41Address(gasFreeControlAddress)));
+            byte[] bytes = org.bouncycastle.util.Arrays.concatenate(ByteArray.fromHexString(Parameter.CommonConstant.ADD_PRE_FIX_STRING), ByteArray.fromHexString(gasFreeControlAddress.substring(2)));
             byte[] bytes1 = org.bouncycastle.util.Arrays.concatenate(bytes, salt);
             byte[] bytes2 = org.bouncycastle.util.Arrays.concatenate(bytes1, bytecodeHash);
             byte[] bytes3 = Hash.sha3omit12(bytes2);
@@ -141,9 +141,9 @@ public class GasFreeGenerator {
         return permitTransferMessageHash(jsonString);
     }
     public static String permitTransferMessageHash(String eip712Message) throws Exception {
-        ParamCheck.isValidParma(eip712Message);
+        String normalizedMessage = ParamCheck.validatedMessage(eip712Message).toString();
         try {
-            StructuredDataEncoder dataEncoder = new StructuredDataEncoder(eip712Message);
+            StructuredDataEncoder dataEncoder = new StructuredDataEncoder(normalizedMessage);
             return Numeric.toHexString(dataEncoder.hashStructuredData());
         } catch (Exception e) {
             throw new GasFreeException("Unable to encode GasFree typed data", e);
@@ -151,12 +151,9 @@ public class GasFreeGenerator {
     }
 
 
-    private static byte[] byte32Address(String address) {
-        String value = AddressUtil.replace41Address(address);
-        byte[] addressBytes = ByteArray.fromHexString(value);
-        if (addressBytes == null) {
-            return null;
-        }
+    private static byte[] byte32Address(String normalizedAddress) {
+        // Remove exactly the network byte from the validated 21-byte address.
+        byte[] addressBytes = ByteArray.fromHexString(normalizedAddress.substring(2));
         return new DataWord(addressBytes).getData();
     }
 }

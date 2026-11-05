@@ -28,8 +28,12 @@ Unknown or invalid chain IDs return an empty string from
 overload with explicit beacon, controller, and creation code. Address generation
 also returns an empty string when validation or encoding fails.
 
+Address generation and hashing accept Base58Check, 40-digit hex, and `41` followed
+by 40 hex digits. Both hex forms may include a `0x` or `0X` prefix. Equivalent
+representations are normalized to the same address before encoding.
+
 Hash generation checks the GasFree V1 schema, domain, required message fields,
-address formats, and unsigned `uint256` values before passing the supplied JSON
+address formats, and unsigned `uint256` values before passing the normalized JSON
 to the core encoder. The hash overloads declare `Exception`; expected validation
 and encoding failures are reported as `GasFreeException`. Use integer strings
 for large `uint256` values rather than converting through floating-point numbers.

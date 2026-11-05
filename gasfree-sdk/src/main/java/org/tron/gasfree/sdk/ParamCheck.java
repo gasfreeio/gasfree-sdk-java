@@ -57,7 +57,8 @@ public class ParamCheck {
         }
     }
 
-    private static JsonObject validatedMessage(String payload) throws GasFreeException {
+    /** Validates the payload and returns a fresh tree with canonical TRON hex addresses. */
+    static JsonObject validatedMessage(String payload) throws GasFreeException {
         try {
             require(payload != null && !payload.trim().isEmpty(), "Invalid input message");
             JsonElement parsed = JsonParser.parseString(payload);
@@ -74,7 +75,8 @@ public class ParamCheck {
             exactString(domain.get("name"), DOMAIN_NAME, "domain.name");
             exactString(domain.get("version"), DOMAIN_VERSION, "domain.version");
             unsigned(domain.get("chainId"), true, "domain.chainId");
-            address(domain.get("verifyingContract"), "domain.verifyingContract");
+            domain.addProperty("verifyingContract",
+                    address(domain.get("verifyingContract"), "domain.verifyingContract"));
 
             JsonObject message = object(root.get("message"), "message");
             String[] names = new String[MESSAGE_FIELDS.length];
@@ -82,12 +84,18 @@ public class ParamCheck {
             exactKeys(message, names);
             for (String[] field : MESSAGE_FIELDS) {
                 if ("address".equals(field[1])) {
-                    address(message.get(field[0]), "message." + field[0]);
+                    message.addProperty(field[0], address(message.get(field[0]), "message." + field[0]));
                 } else {
                     unsigned(message.get(field[0]), false, "message." + field[0]);
                 }
             }
-            return root;
+            // The core ignores other root members; do not serialize unvalidated trees.
+            JsonObject normalized = new JsonObject();
+            normalized.add("primaryType", root.get("primaryType"));
+            normalized.add("types", types);
+            normalized.add("domain", domain);
+            normalized.add("message", message);
+            return normalized;
         } catch (GasFreeException e) {
             throw e;
         } catch (RuntimeException e) {
@@ -144,12 +152,12 @@ public class ParamCheck {
         return integer;
     }
 
-    private static void address(JsonElement value, String field) throws GasFreeException {
+    private static String address(JsonElement value, String field) throws GasFreeException {
         require(isString(value), "Invalid address: " + field);
-        normalizeAddress(value.getAsString());
+        return normalizeAddress(value.getAsString());
     }
 
-    /** Matches the main app's GasFreeAddressValidator normalization for validation only. */
+    /** Returns lowercase 21-byte TRON hex (41 + 40 hex digits) for validation and encoding. */
     static String normalizeAddress(String address) throws GasFreeException {
         require(address != null && !address.trim().isEmpty(), "Invalid TRON address");
         String value = address.trim();
