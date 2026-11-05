@@ -44,45 +44,21 @@ android {
 //    }
 //}
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    //noinspection GradleCompatible
+    // Required by the AppCompat theme bundled with this AAR.
     implementation 'androidx.appcompat:appcompat:1.2.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    implementation 'com.google.code.gson:gson:2.2.4'
+    implementation 'com.google.code.gson:gson:2.11.0'
 
-    //grpc
-    implementation ('io.grpc:grpc-protobuf:1.14.0') {
-        exclude group:'com.google.api.grpc',module:'proto-google-common-protos'
-    }
-    implementation 'io.grpc:grpc-okhttp:1.38.0'
-    implementation 'io.grpc:grpc-stub:1.14.0'
-    implementation 'javax.annotation:javax.annotation-api:1.2'
-    implementation 'com.google.protobuf:protobuf-java:3.4.0'
-
-    //common
-    implementation 'org.apache.commons:commons-lang3:3.5'
-    implementation 'androidx.multidex:multidex:2.0.0'
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
     implementation 'org.bouncycastle:bcprov-jdk18on:1.78.1'
 
-    compileOnly 'org.projectlombok:lombok:1.18.24'
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
-    // SLF4J
-    implementation 'org.slf4j:slf4j-api:1.7.25'
+    // The core is consumed as a bare AAR, so its dependencies must be explicit.
+    // AddressUtil/Sha256Hash/ByteArray need Guava and protobuf ByteString.
+    implementation 'com.google.guava:guava:33.3.1-android'
+    implementation 'com.google.protobuf:protobuf-java:3.25.8'
 
-    implementation 'com.alibaba:fastjson:1.2.78'
-    //keystore
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.8.5'
-
-    //retrofit+rxjava
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-
-    implementation 'com.github.TronLink:tronlink-android-core:1.0.6@aar'
+    implementation 'com.github.TronLink:tronlink-android-core:1.0.14@aar'
 
 }
 
