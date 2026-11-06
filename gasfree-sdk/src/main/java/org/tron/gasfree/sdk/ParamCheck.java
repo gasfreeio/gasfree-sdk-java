@@ -1,32 +1,215 @@
 package org.tron.gasfree.sdk;
 
-import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
+import org.tron.common.utils.ByteArray;
 import org.tron.walletserver.AddressUtil;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.math.BigInteger;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
+
+/** Pure GasFree V1 protocol checks; live account and fee checks belong to the caller. */
 public class ParamCheck {
+    static final String DOMAIN_NAME = "GasFreeController";
+    static final String DOMAIN_VERSION = "V1.0.0";
+    private static final String[][] DOMAIN_FIELDS = {
+            {"name", "string"}, {"version", "string"},
+            {"chainId", "uint256"}, {"verifyingContract", "address"}
+    };
+    private static final String[][] MESSAGE_FIELDS = {
+            {"token", "address"}, {"serviceProvider", "address"},
+            {"user", "address"}, {"receiver", "address"},
+            {"value", "uint256"}, {"maxFee", "uint256"},
+            {"deadline", "uint256"}, {"version", "uint256"}, {"nonce", "uint256"}
+    };
+
+    /** Retained for source and binary compatibility with the original misspelled API. */
     public static boolean isValidParma(String eip712Message) throws Exception {
-        Gson gson = new Gson();
-        JsonObject data
-                = gson.fromJson(eip712Message, JsonObject.class);
-        String message = data.get("message").toString();
-        GasFreeMessage object = gson.fromJson(message, GasFreeMessage.class);
-        if(object == null){
-            throw new GasFreeException("Invalid input message");
-        }
-        if(!AddressUtil.isAddressValid(object.getToken())){
-            throw new GasFreeException("Invalid message.token: ${"+object.getToken() + "}, should be a valid Tron address");
-        }
-        if(!AddressUtil.isAddressValid(object.getUser())){
-            throw new GasFreeException("Invalid message.user: ${"+object.getUser() + "}, should be a valid Tron address");
-        }
-        if(!AddressUtil.isAddressValid(object.getReceiver())){
-            throw new GasFreeException("Invalid message.receiver: ${"+object.getReceiver() + "}, should be a valid Tron address");
-        }
-        if(!AddressUtil.isAddressValid(object.getServiceProvider())){
-            throw new GasFreeException("Invalid message.provider: ${"+object.getServiceProvider() + "}, should be a valid Tron address");
-        }
+        return isValidParam(eip712Message);
+    }
+
+    public static boolean isValidParam(String eip712Message) throws GasFreeException {
+        validatedMessage(eip712Message);
         return true;
+    }
+
+    /** Accepts decimal or hexadecimal uint256 network IDs, with surrounding whitespace. */
+    static BigInteger parseChainId(String chainId) throws GasFreeException {
+        require(chainId != null, "Invalid chainId");
+        return unsignedString(chainId.trim(), true, "chainId");
+    }
+
+    /** Returns a fresh tree with canonical TRON hex addresses and a decimal chainId. */
+    static JsonObject validatedMessage(String payload) throws GasFreeException {
+        try {
+            require(payload != null && !payload.trim().isEmpty(), "Invalid input message");
+            rejectDuplicateKeys(payload);
+            JsonElement parsed = JsonParser.parseString(payload);
+            require(parsed != null && parsed.isJsonObject(), "Invalid input message");
+            JsonObject root = parsed.getAsJsonObject();
+            exactString(root.get("primaryType"), "PermitTransfer", "primaryType");
+            JsonObject types = object(root.get("types"), "types");
+            exactKeys(types, "EIP712Domain", "PermitTransfer");
+            checkFields(types.get("EIP712Domain"), DOMAIN_FIELDS);
+            checkFields(types.get("PermitTransfer"), MESSAGE_FIELDS);
+
+            JsonObject domain = object(root.get("domain"), "domain");
+            exactKeys(domain, "name", "version", "chainId", "verifyingContract");
+            exactString(domain.get("name"), DOMAIN_NAME, "domain.name");
+            exactString(domain.get("version"), DOMAIN_VERSION, "domain.version");
+            // Core's domain deserializer accepts decimal BigInteger strings only.
+            domain.addProperty("chainId",
+                    unsigned(domain.get("chainId"), true, "domain.chainId").toString());
+            domain.addProperty("verifyingContract",
+                    address(domain.get("verifyingContract"), "domain.verifyingContract"));
+
+            JsonObject message = object(root.get("message"), "message");
+            String[] names = new String[MESSAGE_FIELDS.length];
+            for (int i = 0; i < names.length; i++) names[i] = MESSAGE_FIELDS[i][0];
+            exactKeys(message, names);
+            for (String[] field : MESSAGE_FIELDS) {
+                if ("address".equals(field[1])) {
+                    message.addProperty(field[0], address(message.get(field[0]), "message." + field[0]));
+                } else {
+                    unsigned(message.get(field[0]), false, "message." + field[0]);
+                }
+            }
+            // The core ignores other root members; do not serialize unvalidated trees.
+            JsonObject normalized = new JsonObject();
+            normalized.add("primaryType", root.get("primaryType"));
+            normalized.add("types", types);
+            normalized.add("domain", domain);
+            normalized.add("message", message);
+            return normalized;
+        } catch (GasFreeException e) {
+            throw e;
+        } catch (IOException | RuntimeException e) {
+            throw new GasFreeException("Invalid GasFree typed data", e);
+        }
+    }
+
+    /**
+     * Gson keeps the last value of a repeated key, while other parsers keep the first.
+     * Reject repeats (compared after unescaping) so every parser sees the same payload.
+     */
+    @SuppressWarnings("deprecation") // setStrictness needs Gson 2.11; consumers may resolve older Gson.
+    private static void rejectDuplicateKeys(String payload) throws IOException, GasFreeException {
+        JsonReader reader = new JsonReader(new StringReader(payload));
+        reader.setLenient(true); // Same syntax as JsonParser.parseString.
+        Deque<Set<String>> scopes = new ArrayDeque<>();
+        while (true) {
+            switch (reader.peek()) {
+                case BEGIN_OBJECT:
+                    reader.beginObject();
+                    scopes.push(new HashSet<String>());
+                    break;
+                case BEGIN_ARRAY:
+                    reader.beginArray();
+                    scopes.push(new HashSet<String>());
+                    break;
+                case END_OBJECT:
+                    reader.endObject();
+                    scopes.pop();
+                    break;
+                case END_ARRAY:
+                    reader.endArray();
+                    scopes.pop();
+                    break;
+                case NAME:
+                    require(scopes.peek().add(reader.nextName()), "Duplicate JSON object key");
+                    break;
+                case END_DOCUMENT:
+                    return;
+                default:
+                    reader.skipValue();
+            }
+        }
+    }
+
+    private static void checkFields(JsonElement value, String[][] fields) throws GasFreeException {
+        require(value != null && value.isJsonArray(), "Invalid type definition");
+        JsonArray entries = value.getAsJsonArray();
+        require(entries.size() == fields.length, "Invalid type field count");
+        for (int i = 0; i < fields.length; i++) {
+            JsonObject entry = object(entries.get(i), "type field");
+            exactKeys(entry, "name", "type");
+            exactString(entry.get("name"), fields[i][0], "type field name/order");
+            exactString(entry.get("type"), fields[i][1], "type field type");
+        }
+    }
+
+    private static JsonObject object(JsonElement element, String field) throws GasFreeException {
+        require(element != null && element.isJsonObject(), "Invalid " + field);
+        return element.getAsJsonObject();
+    }
+
+    private static void exactKeys(JsonObject object, String... names) throws GasFreeException {
+        Set<String> keys = new HashSet<>();
+        for (java.util.Map.Entry<String, JsonElement> entry : object.entrySet()) keys.add(entry.getKey());
+        require(keys.equals(new HashSet<>(Arrays.asList(names))), "Missing or unexpected fields");
+    }
+
+    private static void exactString(JsonElement value, String expected, String field) throws GasFreeException {
+        require(isString(value) && expected.equals(value.getAsString()), "Invalid " + field);
+    }
+
+    private static boolean isString(JsonElement value) {
+        return value != null && value.isJsonPrimitive() && value.getAsJsonPrimitive().isString();
+    }
+
+    private static BigInteger unsigned(JsonElement value, boolean hexAllowed, String field)
+            throws GasFreeException {
+        require(value != null && value.isJsonPrimitive()
+                && (value.getAsJsonPrimitive().isString() || value.getAsJsonPrimitive().isNumber()),
+                "Invalid " + field);
+        return unsignedString(value.getAsString(), hexAllowed, field);
+    }
+
+    private static BigInteger unsignedString(String value, boolean hexAllowed, String field)
+            throws GasFreeException {
+        require(value != null, "Invalid unsigned integer: " + field);
+        boolean hex = hexAllowed && (value.startsWith("0x") || value.startsWith("0X"));
+        // Bound work before regex matching, substring allocation, or BigInteger parsing.
+        require(value.length() <= (hex ? 66 : 78), "Integer exceeds uint256 length: " + field);
+        require(value.matches(hex ? "0[xX][0-9a-fA-F]+" : "[0-9]+"),
+                "Invalid unsigned integer: " + field);
+        BigInteger integer = new BigInteger(hex ? value.substring(2) : value, hex ? 16 : 10);
+        require(integer.bitLength() <= 256, "Integer exceeds uint256: " + field);
+        return integer;
+    }
+
+    private static String address(JsonElement value, String field) throws GasFreeException {
+        require(isString(value), "Invalid address: " + field);
+        return normalizeAddress(value.getAsString());
+    }
+
+    /** Returns lowercase 21-byte TRON hex (41 + 40 hex digits) for validation and encoding. */
+    static String normalizeAddress(String address) throws GasFreeException {
+        require(address != null && !address.trim().isEmpty(), "Invalid TRON address");
+        String value = address.trim();
+        // Base58 decoding is quadratic; the longest accepted form is 0x41 + 40 hex digits.
+        require(value.length() <= 44, "Invalid TRON address");
+        if (value.startsWith("0x") || value.startsWith("0X")) {
+            value = value.substring(2);
+        }
+        if (value.matches("[0-9a-fA-F]{40}")) return "41" + value.toLowerCase(Locale.US);
+        if (value.matches("41[0-9a-fA-F]{40}")) return value.toLowerCase(Locale.US);
+        byte[] bytes = AddressUtil.decode58Check(value);
+        require(bytes != null && bytes.length == 21 && bytes[0] == 0x41, "Invalid TRON address");
+        return ByteArray.toHexString(bytes).toLowerCase(Locale.US);
+    }
+
+    private static void require(boolean condition, String message) throws GasFreeException {
+        if (!condition) throw new GasFreeException(message);
     }
 }

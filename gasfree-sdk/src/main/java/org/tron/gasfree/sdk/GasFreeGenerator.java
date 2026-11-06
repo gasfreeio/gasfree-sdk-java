@@ -8,15 +8,12 @@ import org.tron.common.crypto.datatypes.Address;
 import org.tron.common.crypto.datatypes.DynamicBytes;
 import org.tron.common.crypto.datatypes.Function;
 import org.tron.common.utils.ByteArray;
-import org.tron.common.utils.LogUtils;
 import org.tron.common.utils.abi.DataWord;
 import org.tron.config.Parameter;
 import org.tron.walletserver.AddressUtil;
-import java.util.*;
-import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -26,45 +23,65 @@ import com.google.gson.GsonBuilder;
 public class GasFreeGenerator {
 
     public static String generateGasFreeAddress(String userAddress, String chainId) {
-        if (Constant.NileNetCode.equals(chainId)) {
-            return generateGasFreeAddress(userAddress, Constant.beaconAddressNile, Constant.GasFreeControllerAddressNile, Constant.creationCodeStr);
-        } else if (Constant.MainNetCode.equals(chainId)) {
-            return generateGasFreeAddress(userAddress, Constant.beaconAddressRelease, Constant.GasFreeControllerAddressRelease, Constant.creationCodeStrRelease);
-        } else if (Constant.ShastaNetCode.equals(chainId)) {
-            return generateGasFreeAddress(userAddress, Constant.beaconAddressShasta, Constant.GasFreeControllerAddressShasta, Constant.creationCodeStr);
-        } else {
-            return generateGasFreeAddress(userAddress, Constant.beaconAddressRelease, Constant.GasFreeControllerAddressRelease, Constant.creationCodeStrRelease);
+        try {
+            BigInteger network = ParamCheck.parseChainId(chainId);
+            if (ParamCheck.parseChainId(Constant.NileNetCode).equals(network)) {
+                return generateGasFreeAddress(userAddress, Constant.beaconAddressNile, Constant.GasFreeControllerAddressNile, Constant.creationCodeStr);
+            } else if (ParamCheck.parseChainId(Constant.MainNetCode).equals(network)) {
+                return generateGasFreeAddress(userAddress, Constant.beaconAddressRelease, Constant.GasFreeControllerAddressRelease, Constant.creationCodeStrRelease);
+            } else if (ParamCheck.parseChainId(Constant.ShastaNetCode).equals(network)) {
+                return generateGasFreeAddress(userAddress, Constant.beaconAddressShasta, Constant.GasFreeControllerAddressShasta, Constant.creationCodeStr);
+            }
+            return "";
+        } catch (GasFreeException e) {
+            return "";
         }
     }
 
-    public static String generateGasFreeAddress(String user, String beanconAddress, String gasFreeControlAddress, String creationCodeStr) {
+    public static String generateGasFreeAddress(String user, String beaconAddress, String gasFreeControlAddress, String creationCodeStr) {
         try {
+            if (creationCodeStr == null) {
+                return "";
+            }
+            String creationCodeHex = creationCodeStr.startsWith("0x") || creationCodeStr.startsWith("0X")
+                    ? creationCodeStr.substring(2) : creationCodeStr;
+            // ByteArray accepts empty, odd-length and whitespace-containing input.
+            // Require complete bytecode bytes before deriving a CREATE2 address.
+            if (creationCodeHex.isEmpty() || creationCodeHex.length() % 2 != 0
+                    || !creationCodeHex.matches("[0-9a-fA-F]+")) {
+                return "";
+            }
+            byte[] creationCode = ByteArray.fromHexString(creationCodeHex);
+            if (creationCode.length == 0) {
+                return "";
+            }
+            user = ParamCheck.normalizeAddress(user);
+            beaconAddress = ParamCheck.normalizeAddress(beaconAddress);
+            gasFreeControlAddress = ParamCheck.normalizeAddress(gasFreeControlAddress);
             byte[] salt = byte32Address(user);
             Function function = new Function(
                     "initialize",
-                    Arrays.asList(new Address(user)),
+                    Arrays.asList(new Address(new BigInteger(user.substring(2), 16))),
                     Collections.emptyList());
             String initializeFun = FunctionEncoder.encode(function);
 
             String encodeCall = FunctionEncoder.encodeConstructor(
-                    Arrays.asList(new Address(AddressUtil.replace41Address(beanconAddress)),
+                    Arrays.asList(new Address(new BigInteger(beaconAddress.substring(2), 16)),
                             new DynamicBytes(ByteArray.fromHexString(initializeFun))));
-            byte[] creationCode = ByteArray.fromHexString(creationCodeStr);
             // encodePacked
             // cannot use FunctionEncoder.encodeConstructorPacked, because DynamicTypes packed function changed
-            byte[] bytecodeHash = Hash.sha3( org.bouncycastle.util.Arrays.concatenate(creationCode, ByteArray.fromHexString(encodeCall)));
+            byte[] bytecodeHash = Hash.sha3(org.bouncycastle.util.Arrays.concatenate(creationCode, ByteArray.fromHexString(encodeCall)));
 
             // create2
-            byte[] bytes =  org.bouncycastle.util.Arrays.concatenate(ByteArray.fromHexString(Parameter.CommonConstant.ADD_PRE_FIX_STRING), ByteArray.fromHexString(AddressUtil.replace41Address(gasFreeControlAddress)));
-            byte[] bytes1 =  org.bouncycastle.util.Arrays.concatenate(bytes, salt);
-            byte[] bytes2 =  org.bouncycastle.util.Arrays.concatenate(bytes1, bytecodeHash);
+            byte[] bytes = org.bouncycastle.util.Arrays.concatenate(ByteArray.fromHexString(Parameter.CommonConstant.ADD_PRE_FIX_STRING), ByteArray.fromHexString(gasFreeControlAddress.substring(2)));
+            byte[] bytes1 = org.bouncycastle.util.Arrays.concatenate(bytes, salt);
+            byte[] bytes2 = org.bouncycastle.util.Arrays.concatenate(bytes1, bytecodeHash);
             byte[] bytes3 = Hash.sha3omit12(bytes2);
             String gasFreeAddress = AddressUtil.encode58Check(bytes3);
             return gasFreeAddress;
         } catch (Exception e) {
-            LogUtils.e(e);
+            return "";
         }
-        return "";
     }
     private static Map<String, String> createType(String name, String type) {
         Map<String, String> typeMap = new HashMap<>();
@@ -87,9 +104,9 @@ public class GasFreeGenerator {
         // domain
         Map<String, Object> domain = new HashMap<>();
         domain.put("chainId", chainId);
-        domain.put("name", "GasFreeController");
+        domain.put("name", ParamCheck.DOMAIN_NAME);
         domain.put("verifyingContract", verifyingContract);
-        domain.put("version", "V1.0.0");
+        domain.put("version", ParamCheck.DOMAIN_VERSION);
 
         // message
         Map<String, Object> message = new HashMap<>();
@@ -135,29 +152,22 @@ public class GasFreeGenerator {
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String jsonString = gson.toJson(json);
-        System.out.println(jsonString);
         return permitTransferMessageHash(jsonString);
     }
     public static String permitTransferMessageHash(String eip712Message) throws Exception {
-        ParamCheck.isValidParma(eip712Message);
-        StructuredDataEncoder dataEncoder = new StructuredDataEncoder(eip712Message);
-        byte[] bytes = dataEncoder.hashDomain();
-        String domainStr = Numeric.toHexString(bytes);
-
-        byte[] hashMessage = dataEncoder.hashMessage();
-        String messageStr = Numeric.toHexString(hashMessage);
-        byte[] hashStructuredData = dataEncoder.hashStructuredData();
-        String hash = Numeric.toHexString(hashStructuredData);
-        return hash;
+        String normalizedMessage = ParamCheck.validatedMessage(eip712Message).toString();
+        try {
+            StructuredDataEncoder dataEncoder = new StructuredDataEncoder(normalizedMessage);
+            return Numeric.toHexString(dataEncoder.hashStructuredData());
+        } catch (Exception e) {
+            throw new GasFreeException("Unable to encode GasFree typed data", e);
+        }
     }
 
 
-    private static byte[] byte32Address(String address) {
-        String value = AddressUtil.replace41Address(address);
-        byte[] addressBytes = ByteArray.fromHexString(value);
-        if (addressBytes == null) {
-            return null;
-        }
+    private static byte[] byte32Address(String normalizedAddress) {
+        // Remove exactly the network byte from the validated 21-byte address.
+        byte[] addressBytes = ByteArray.fromHexString(normalizedAddress.substring(2));
         return new DataWord(addressBytes).getData();
     }
 }
