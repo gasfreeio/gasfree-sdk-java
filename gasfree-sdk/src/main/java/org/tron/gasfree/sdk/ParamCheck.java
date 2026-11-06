@@ -4,11 +4,16 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 import org.tron.common.utils.ByteArray;
 import org.tron.walletserver.AddressUtil;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.math.BigInteger;
+import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -48,6 +53,7 @@ public class ParamCheck {
     static JsonObject validatedMessage(String payload) throws GasFreeException {
         try {
             require(payload != null && !payload.trim().isEmpty(), "Invalid input message");
+            rejectDuplicateKeys(payload);
             JsonElement parsed = JsonParser.parseString(payload);
             require(parsed != null && parsed.isJsonObject(), "Invalid input message");
             JsonObject root = parsed.getAsJsonObject();
@@ -87,8 +93,46 @@ public class ParamCheck {
             return normalized;
         } catch (GasFreeException e) {
             throw e;
-        } catch (RuntimeException e) {
+        } catch (IOException | RuntimeException e) {
             throw new GasFreeException("Invalid GasFree typed data", e);
+        }
+    }
+
+    /**
+     * Gson keeps the last value of a repeated key, while other parsers keep the first.
+     * Reject repeats (compared after unescaping) so every parser sees the same payload.
+     */
+    @SuppressWarnings("deprecation") // setStrictness needs Gson 2.11; consumers may resolve older Gson.
+    private static void rejectDuplicateKeys(String payload) throws IOException, GasFreeException {
+        JsonReader reader = new JsonReader(new StringReader(payload));
+        reader.setLenient(true); // Same syntax as JsonParser.parseString.
+        Deque<Set<String>> scopes = new ArrayDeque<>();
+        while (true) {
+            switch (reader.peek()) {
+                case BEGIN_OBJECT:
+                    reader.beginObject();
+                    scopes.push(new HashSet<String>());
+                    break;
+                case BEGIN_ARRAY:
+                    reader.beginArray();
+                    scopes.push(new HashSet<String>());
+                    break;
+                case END_OBJECT:
+                    reader.endObject();
+                    scopes.pop();
+                    break;
+                case END_ARRAY:
+                    reader.endArray();
+                    scopes.pop();
+                    break;
+                case NAME:
+                    require(scopes.peek().add(reader.nextName()), "Duplicate JSON object key");
+                    break;
+                case END_DOCUMENT:
+                    return;
+                default:
+                    reader.skipValue();
+            }
         }
     }
 
@@ -153,6 +197,8 @@ public class ParamCheck {
     static String normalizeAddress(String address) throws GasFreeException {
         require(address != null && !address.trim().isEmpty(), "Invalid TRON address");
         String value = address.trim();
+        // Base58 decoding is quadratic; the longest accepted form is 0x41 + 40 hex digits.
+        require(value.length() <= 44, "Invalid TRON address");
         if (value.startsWith("0x") || value.startsWith("0X")) {
             value = value.substring(2);
         }

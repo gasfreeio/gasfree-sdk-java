@@ -33,6 +33,8 @@ digits; the optional `0x` or `0X` prefix is accepted.
 Address generation and hashing accept Base58Check, 40-digit hex, and `41` followed
 by 40 hex digits. Both hex forms may include a `0x` or `0X` prefix. Equivalent
 representations are normalized to the same address before encoding.
+After trimming surrounding whitespace, an address may contain at most 44
+characters; longer input is rejected before Base58 decoding.
 
 Hash generation checks the GasFree V1 schema, domain, required message fields,
 address formats, and unsigned `uint256` values before passing the normalized JSON
@@ -42,6 +44,8 @@ for large `uint256` values rather than converting through floating-point numbers
 Decimal `uint256` representations are limited to 78 digits. Hexadecimal chain
 IDs are limited to 64 hex digits excluding the optional prefix. In both cases,
 the numeric value must not exceed `2^256 - 1`.
+Duplicate JSON object keys are rejected at every nesting level, including keys
+that differ only by escaping (for example `"value"` and `"value"`).
 
 Hash generation is an offline operation. Callers must check the selected network
 and contract, token/provider support, current fees and activation status, message
