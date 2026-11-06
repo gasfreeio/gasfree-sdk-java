@@ -38,26 +38,13 @@ public class ParamCheck {
         return true;
     }
 
-    /** Matches the main app's GasFreeChainIdValidator parsing. */
+    /** Accepts decimal or hexadecimal uint256 network IDs, with surrounding whitespace. */
     static BigInteger parseChainId(String chainId) throws GasFreeException {
-        require(chainId != null && !chainId.trim().isEmpty(), "Invalid chainId");
-        String normalized = chainId.trim();
-        int radix = 10;
-        if (normalized.startsWith("0x") || normalized.startsWith("0X")) {
-            normalized = normalized.substring(2);
-            radix = 16;
-        }
-        require(!normalized.isEmpty(), "Invalid chainId");
-        try {
-            BigInteger parsed = new BigInteger(normalized, radix);
-            require(parsed.signum() >= 0, "Invalid chainId");
-            return parsed;
-        } catch (NumberFormatException e) {
-            throw new GasFreeException("Invalid chainId", e);
-        }
+        require(chainId != null, "Invalid chainId");
+        return unsignedString(chainId.trim(), true, "chainId");
     }
 
-    /** Validates the payload and returns a fresh tree with canonical TRON hex addresses. */
+    /** Returns a fresh tree with canonical TRON hex addresses and a decimal chainId. */
     static JsonObject validatedMessage(String payload) throws GasFreeException {
         try {
             require(payload != null && !payload.trim().isEmpty(), "Invalid input message");
@@ -74,7 +61,9 @@ public class ParamCheck {
             exactKeys(domain, "name", "version", "chainId", "verifyingContract");
             exactString(domain.get("name"), DOMAIN_NAME, "domain.name");
             exactString(domain.get("version"), DOMAIN_VERSION, "domain.version");
-            unsigned(domain.get("chainId"), true, "domain.chainId");
+            // Core's domain deserializer accepts decimal BigInteger strings only.
+            domain.addProperty("chainId",
+                    unsigned(domain.get("chainId"), true, "domain.chainId").toString());
             domain.addProperty("verifyingContract",
                     address(domain.get("verifyingContract"), "domain.verifyingContract"));
 
@@ -145,8 +134,11 @@ public class ParamCheck {
     private static BigInteger unsignedString(String value, boolean hexAllowed, String field)
             throws GasFreeException {
         require(value != null, "Invalid unsigned integer: " + field);
-        boolean hex = hexAllowed && value.matches("0[xX][0-9a-fA-F]+");
-        require(hex || value.matches("[0-9]+"), "Invalid unsigned integer: " + field);
+        boolean hex = hexAllowed && (value.startsWith("0x") || value.startsWith("0X"));
+        // Bound work before regex matching, substring allocation, or BigInteger parsing.
+        require(value.length() <= (hex ? 66 : 78), "Integer exceeds uint256 length: " + field);
+        require(value.matches(hex ? "0[xX][0-9a-fA-F]+" : "[0-9]+"),
+                "Invalid unsigned integer: " + field);
         BigInteger integer = new BigInteger(hex ? value.substring(2) : value, hex ? 16 : 10);
         require(integer.bitLength() <= 256, "Integer exceeds uint256: " + field);
         return integer;

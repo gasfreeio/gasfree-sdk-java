@@ -27,6 +27,8 @@ Unknown or invalid chain IDs return an empty string from
 `generateGasFreeAddress(userAddress, chainId)`. For a custom deployment, use the
 overload with explicit beacon, controller, and creation code. Address generation
 also returns an empty string when validation or encoding fails.
+Custom deployment creation code must contain at least one byte of paired hex
+digits; the optional `0x` or `0X` prefix is accepted.
 
 Address generation and hashing accept Base58Check, 40-digit hex, and `41` followed
 by 40 hex digits. Both hex forms may include a `0x` or `0X` prefix. Equivalent
@@ -37,6 +39,9 @@ address formats, and unsigned `uint256` values before passing the normalized JSO
 to the core encoder. The hash overloads declare `Exception`; expected validation
 and encoding failures are reported as `GasFreeException`. Use integer strings
 for large `uint256` values rather than converting through floating-point numbers.
+Decimal `uint256` representations are limited to 78 digits. Hexadecimal chain
+IDs are limited to 64 hex digits excluding the optional prefix. In both cases,
+the numeric value must not exceed `2^256 - 1`.
 
 Hash generation is an offline operation. Callers must check the selected network
 and contract, token/provider support, current fees and activation status, message
@@ -57,8 +62,14 @@ maven { url "https://jitpack.io"  }
 ```
 Add dependency.
 ```
-implementation 'com.github.Gasfreeio:gasfree-sdk:1.1.0@aar'
+implementation 'com.github.Gasfreeio:gasfree-sdk:1.1.1'
 ```
+Keep the dependency's POM metadata so Gradle also resolves the SDK's required
+runtime dependencies. Do not append `@aar`.
+
+Version `1.1.1` is the next release and is not published yet. Release it from a
+new immutable `1.1.1` tag and verify this coordinate resolves on JitPack before
+using it. Do not move or replace the already published `v1.1.0` tag.
 
 ## Demo
 - [testGeneratorGasFreeAddress](./gasfree-sdk/src/test/java/org/tron/gasfree/sdk/GasFreeGeneratorTest.java)

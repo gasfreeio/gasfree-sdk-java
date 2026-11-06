@@ -40,6 +40,21 @@ public class GasFreeGenerator {
 
     public static String generateGasFreeAddress(String user, String beaconAddress, String gasFreeControlAddress, String creationCodeStr) {
         try {
+            if (creationCodeStr == null) {
+                return "";
+            }
+            String creationCodeHex = creationCodeStr.startsWith("0x") || creationCodeStr.startsWith("0X")
+                    ? creationCodeStr.substring(2) : creationCodeStr;
+            // ByteArray accepts empty, odd-length and whitespace-containing input.
+            // Require complete bytecode bytes before deriving a CREATE2 address.
+            if (creationCodeHex.isEmpty() || creationCodeHex.length() % 2 != 0
+                    || !creationCodeHex.matches("[0-9a-fA-F]+")) {
+                return "";
+            }
+            byte[] creationCode = ByteArray.fromHexString(creationCodeHex);
+            if (creationCode.length == 0) {
+                return "";
+            }
             user = ParamCheck.normalizeAddress(user);
             beaconAddress = ParamCheck.normalizeAddress(beaconAddress);
             gasFreeControlAddress = ParamCheck.normalizeAddress(gasFreeControlAddress);
@@ -53,7 +68,6 @@ public class GasFreeGenerator {
             String encodeCall = FunctionEncoder.encodeConstructor(
                     Arrays.asList(new Address(new BigInteger(beaconAddress.substring(2), 16)),
                             new DynamicBytes(ByteArray.fromHexString(initializeFun))));
-            byte[] creationCode = ByteArray.fromHexString(creationCodeStr);
             // encodePacked
             // cannot use FunctionEncoder.encodeConstructorPacked, because DynamicTypes packed function changed
             byte[] bytecodeHash = Hash.sha3(org.bouncycastle.util.Arrays.concatenate(creationCode, ByteArray.fromHexString(encodeCall)));
